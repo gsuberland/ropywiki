@@ -13,7 +13,7 @@ Current features include:
 
 ## Known issues
 
-XSS is trivially possible via the search functionality and file contents. **ROPyWiki is not intended for use with untrusted content!**
+XSS is trivially possible via the search functionality and file contents. **ROPyWiki is not intended for use with untrusted content, nor is it intended to be accessed remotely!**
 
 ## Setup and use
 
