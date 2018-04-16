@@ -5,6 +5,14 @@ import mimetypes
 import markdown
 from markdown.extensions.toc import TocExtension
 
+'''
+
+ROPy Wiki
+Written by Graham Sutherland (gsuberland)
+Inspired by sqshr's mikiwiki - https://github.com/sqshr/mikiwiki
+
+'''
+
 sitedir = ".\\wiki"
 page_template_path = ".\\pagetemplate.html"
 combined_css_path = ".\\combined.css"
@@ -114,7 +122,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 def run():
     serveraddr = ('localhost', 8080)
     server = HTTPServer(serveraddr, RequestHandler)
-    print("rowiki started")
+    print("ROPyWiki started")
     server.serve_forever()
 
 if __name__ == "__main__":
