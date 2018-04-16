@@ -1,9 +1,19 @@
 # ROPyWiki
 ROPyWiki (read-only python wiki) is a simple, lightweight, locally run, read-only wiki for markdown files. The primary use-case is as a web frontend for a git-backed wiki. It is heavily inspired by [sqshr's mikiwiki](https://github.com/sqshr/mikiwiki).
 
-It is designed to be very lightweight and use minimal dependencies. At current the only dependency is the [Markdown](https://pypi.org/project/Markdown/) package.
+## Features
 
-ROPyWiki is currently under development. It is in a usable state but has no search function and some things are a work in progress.
+ROPyWiki is currently under development, but it is in a usable state.
+
+Current features include:
+
+* Standard markdown support, including images
+* Minimal dependencies. At current the only dependency is the [Markdown](https://pypi.org/project/Markdown/) package.
+* Search against file/directory names and file contents, with search term highlighting on results.
+
+## Known issues
+
+XSS is trivially possible via the search functionality and file contents. **ROPyWiki is not intended for use with untrusted content!**
 
 ## Setup and use
 

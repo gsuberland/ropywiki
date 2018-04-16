@@ -1,6 +1,7 @@
 import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.request import url2pathname
+import cgi
 import mimetypes
 import markdown
 from markdown.extensions.toc import TocExtension
@@ -96,6 +97,58 @@ class RequestHandler(BaseHTTPRequestHandler):
             title = "/" + title
         self.handle_page_render(content, title)
 
+    def quote_line(self, line, term):
+        index_l = line.lower().index(term.lower())
+        return line[:index_l] + "**" + line[index_l:index_l + len(term)] + "**" + line[index_l + len(term):]
+
+    def handle_search(self):
+        form = cgi.FieldStorage(fp=self.rfile, headers=self.headers, environ={'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers['Content-Type']})
+        term = ""
+        if 'term' in form:
+            term = form['term'].value
+        term = str.lower(term)
+        results_dirname = []
+        results_filename = []
+        results_contents = []
+        if term != "":
+            for root, dirs, files in os.walk(os.path.abspath(sitedir)):
+                for name in dirs:
+                    if term in str.lower(name):
+                        results_dirname.append(os.path.relpath(os.path.join(root, name), os.path.abspath(sitedir)))
+                for name in files:
+                    if term in str.lower(name):
+                        results_filename.append(os.path.relpath(os.path.join(root, name), os.path.abspath(sitedir)))
+                for name in files:
+                    line_number = 0
+                    filepath = os.path.join(root, name)
+                    guessed_type, guessed_encoding = mimetypes.guess_type(filepath)
+                    if guessed_type is None or ('image' not in guessed_type and 'binary' not in guessed_type):
+                        try:
+                            for line in open(filepath):
+                                if term in str.lower(line):
+                                    results_contents.append((name, line_number, line))
+                                line_number += 1
+                        except:
+                            print("Search couldn't read " + filepath)
+        content = "# Search results for " + term + "\n"
+        if len(results_dirname) == 0 and len(results_filename) == 0 and len(results_contents) == 0:
+            content += "No results found."
+        else:
+            if len(results_dirname) > 0:
+                content += "## Directory names\n"
+                for dirname in results_dirname:
+                    content += "* [" + dirname + "](" + dirname + ")\n"
+            if len(results_filename) > 0:
+                content += "## File names\n"
+                for filename in results_filename:
+                    content += "* [" + filename + "](" + filename + ")\n"
+            if len(results_contents) > 0:
+                content += "## File contents\n"
+                for filename, line_number, line in results_contents:
+                    content += "[" + filename + "](" + filename + ") line " + str(line_number) + ":\n\n"
+                    content += " > " + self.quote_line(line, term) + "\n\n"
+        self.handle_page_render(content, term)
+
     def do_GET(self):
         local_file_path = sitedir+url2pathname(self.path)
         if local_file_path.endswith('.css'):
@@ -117,6 +170,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                         self.handle_page(local_file_path, page_title)
                 else:
                     self.handle_dir(local_file_path)
+
+    def do_POST(self):
+        if self.path == '/search':
+            self.send_response(200)
+            self.handle_search()
+        else:
+            self.handle_404()
 
 
 def run():

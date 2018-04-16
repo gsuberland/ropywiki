@@ -157,9 +157,28 @@ body {
 	display: block;
 	float: left;
 	vertical-align: middle;
+	color: #fff;
+}
+
+#navbar div {
+	display: block;
+	float: left;
+	vertical-align: middle;
+	color: #fff;
+}
+
+#navbar input {
+	margin-left: 10px;
+	height: 30px;
 }
 
 #navbar-title {
 	width: 250px;
 	padding-left: 10px;
+}
+
+blockquote {
+	color: #6a737d;
+	border-left: 0.25em solid #dfe2e5;
+	padding: 0 1em;
 }
