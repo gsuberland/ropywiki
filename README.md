@@ -14,3 +14,11 @@ ROPyWiki is designed to run under Python 3.6 or later.
 3. Place your wiki documents into the `./wiki/` folder (or modify the `sitedir` variable at the top of `ropywiki.py` to point to your wiki directory)
 4. Run `python ropywiki.py`
 5. Connect to the wiki on http://127.0.0.1:8080/
+
+## License
+
+Code released under MIT license. Full license text can be read [here](LICENSE).
+
+## Contributions
+
+Pull requests welcome. Only hard rule is not to introduce new dependencies! :)
